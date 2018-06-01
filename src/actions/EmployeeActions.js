@@ -2,6 +2,7 @@ import firebase from 'firebase';
 import {Actions} from 'react-native-router-flux';
 import {EMPLOYEE_UPDATE} from './types';
 import {EMPLOYEE_CREATE} from './types';
+import {EMPLOYEE_FETCH_SUCCESS} from './types';
 
 export const employeeUpdate = ({prop, value}) => {
   return {
@@ -19,7 +20,7 @@ export const employeeCreate = ({name,phone,shift}) => {
       .push({name,phone,shift})
       .then(() => {
         dispatch({type: EMPLOYEE_CREATE});
-        return Actions.employeeList({ type: 'reset' });
+        Actions.employeeList({ type: 'reset' });
       });
   };
 };
@@ -29,6 +30,8 @@ export const employeesFetch = () => {
 
   return (dispatch) => {
     firebase.database().ref(`/users/${currentUser.uid}/employees`)
-      .get()
+      .on("value", snapshot => {
+        dispatch({type: EMPLOYEE_FETCH_SUCCESS, payload: snapshot.val()});
+      });
   };
 };
