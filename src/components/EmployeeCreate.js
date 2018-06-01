@@ -1,13 +1,20 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Picker} from 'react-native';
 import {connect} from 'react-redux';
-import {employeeUpdate} from '../actions';
+import {employeeUpdate, employeeCreate} from '../actions';
 import CardSection from './CardSection';
 import Card from './Card';
 import InputCustom from './InputCustom';
 import ButtonCustom from './ButtonCustom';
 
 class EmployeeCreate extends Component {
+
+  onCreateButtonPress() {
+    const {name,phone,shift} = this.props;
+
+    this.props.employeeCreate({name,phone,shift});
+  }
+
   render() {
     return (
       <Card>
@@ -47,7 +54,7 @@ class EmployeeCreate extends Component {
         </CardSection>
 
         <CardSection>
-          <ButtonCustom>
+          <ButtonCustom onPress={this.onCreateButtonPress.bind(this)}>
             Create
           </ButtonCustom>
         </CardSection>
@@ -64,7 +71,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {employeeUpdate})(EmployeeCreate);
+export default connect(mapStateToProps, {employeeUpdate, employeeCreate})(EmployeeCreate);
 
 const styles = StyleSheet.create({
   picker: {
