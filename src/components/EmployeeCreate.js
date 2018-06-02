@@ -1,13 +1,17 @@
 import React, {Component} from 'react';
 import {View, Text, StyleSheet, Picker} from 'react-native';
 import {connect} from 'react-redux';
-import {employeeUpdate, employeeCreate} from '../actions';
+import {employeeUpdate, employeeCreate, employeeFormReset} from '../actions';
 import CardSection from './CardSection';
 import Card from './Card';
-import InputCustom from './InputCustom';
 import ButtonCustom from './ButtonCustom';
+import EmployeeForm from './EmployeeForm';
 
 class EmployeeCreate extends Component {
+
+  componentWillMount(){
+    this.props.employeeFormReset();
+  }
 
   onCreateButtonPress() {
     const {name,phone,shift} = this.props;
@@ -18,40 +22,7 @@ class EmployeeCreate extends Component {
   render() {
     return (
       <Card>
-        <CardSection>
-          <InputCustom
-            label="Name"
-            placeholderValue="Josh"
-            value={this.props.name}
-            onChangeText={text => this.props.employeeUpdate({prop:"name",value:text})}
-          />
-        </CardSection>
-
-        <CardSection>
-          <InputCustom
-            label="Phone"
-            placeholderValue="+3801382345"
-            value={this.props.phone}
-            onChangeText={text => this.props.employeeUpdate({prop:"phone",value:text})}
-          />
-        </CardSection>
-
-        <CardSection>
-          <Text style={styles.picker}>Shift</Text>
-          <Picker
-            selectedValue={this.props.shift}
-            onValueChange={day => this.props.employeeUpdate({prop:"shift",value:day})}
-            style={{flex: 1}}
-          >
-            <Picker.Item label="Monday" value="Monday" />
-            <Picker.Item label="Tuesday" value="Tuesday" />
-            <Picker.Item label="Wednesday" value="Wednesday" />
-            <Picker.Item label="Thursday" value="Thursday" />
-            <Picker.Item label="Friday" value="Friday" />
-            <Picker.Item label="Saturday" value="Saturday" />
-            <Picker.Item label="Sunday" value="Sunday" />
-          </Picker>
-        </CardSection>
+        <EmployeeForm {...this.props}/>
 
         <CardSection>
           <ButtonCustom onPress={this.onCreateButtonPress.bind(this)}>
@@ -71,7 +42,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, {employeeUpdate, employeeCreate})(EmployeeCreate);
+export default connect(mapStateToProps, {
+  employeeUpdate, employeeCreate, employeeFormReset
+})(EmployeeCreate);
 
 const styles = StyleSheet.create({
   picker: {
