@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {StyleSheet,Text,View} from 'react-native';
+import Tips from 'react-native-tips'
 import Card from './Card';
 import {connect} from 'react-redux';
 import CardSection from './CardSection';
@@ -9,6 +10,8 @@ import Spinner from './Spinner';
 import {emailChanged, passwordChanged, loginUser} from '../actions';
 
 class LoginForm extends Component {
+
+  state = {isVisible: true};
 
   onEmailChange(text){
     this.props.emailChanged(text);
@@ -21,6 +24,7 @@ class LoginForm extends Component {
   onButtonPress() {
     const {email, password} = this.props;
     this.props.loginUser({email, password});
+
   }
 
   authError(){
@@ -39,7 +43,10 @@ class LoginForm extends Component {
     if(this.props.loading){
       return <Spinner size="large"/>;
     } else {
-      return <ButtonCustom onPress={this.onButtonPress.bind(this)}> Login </ButtonCustom>;
+      return (
+          <ButtonCustom onPress={this.onButtonPress.bind(this)}>
+            Login
+          </ButtonCustom>);
     }
   }
 
@@ -64,9 +71,20 @@ class LoginForm extends Component {
           />
         </CardSection>
         {this.authError()}
+
+        <Tips
+        visible={this.state.isVisible}
+        text="This form works both for registration and authentication purposes."
+        position={"bottom"}
+        offsetTop={50}
+        onRequestClose={() => this.setState({isVisible:false})}
+        >
+        </Tips>
+
         <CardSection>
           {this.isLoading()}
         </CardSection>
+
       </Card>
     );
   }
